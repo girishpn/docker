@@ -11,6 +11,19 @@ RUN  yum -y update && \
 	#install epel-release for centos
 	yum -y install epel-release && \
 	#install apache
+	# steps to enable systemctl in centos container
+	(cd /lib/systemd/system/sysinit.target.wants/; for i in ; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); 
+	rm -f /lib/systemd/system/multi-user.target.wants/;
+	rm -f /etc/systemd/system/.wants/;
+	rm -f /lib/systemd/system/local-fs.target.wants/; 
+	rm -f /lib/systemd/system/sockets.target.wants/udev; 
+	rm -f /lib/systemd/system/sockets.target.wants/initctl; 
+	rm -f /lib/systemd/system/basic.target.wants/;
+	rm -f /lib/systemd/system/anaconda.target.wants/*;
+	#Then build the container using in the dir you have created the file (be sure no other files are inside, as they will be taken into the context and may cause troubles )
+	#docker build --rm -t c7-systemd . (c7-systemd can be replaced with other name)
+	#Then run the image with:
+	#docker run -itd --privileged --name=yourName c7-systemd
 	yum -y install httpd && \
 	# enable apache on boot
 	systemctl enable httpd && \
@@ -40,19 +53,7 @@ RUN  yum -y update && \
 	 cp /root/hosts /etc/ansible/
 	 cp /root/devops.yml /etc/ansbile/
 	 ansible-playbook /etc/ansible/devops
-	# steps to enable systemctl in centos container
-	(cd /lib/systemd/system/sysinit.target.wants/; for i in ; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); 
-	rm -f /lib/systemd/system/multi-user.target.wants/;
-	rm -f /etc/systemd/system/.wants/;
-	rm -f /lib/systemd/system/local-fs.target.wants/; 
-	rm -f /lib/systemd/system/sockets.target.wants/udev; 
-	rm -f /lib/systemd/system/sockets.target.wants/initctl; 
-	rm -f /lib/systemd/system/basic.target.wants/;
-	rm -f /lib/systemd/system/anaconda.target.wants/*;
-	#Then build the container using in the dir you have created the file (be sure no other files are inside, as they will be taken into the context and may cause troubles )
-	#docker build --rm -t c7-systemd . (c7-systemd can be replaced with other name)
-	#Then run the image with:
-	#docker run -itd --privileged --name=yourName c7-systemd
+	
 	
 
 	 
