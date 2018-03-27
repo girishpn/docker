@@ -3,12 +3,10 @@
 FROM centos:7
 MAINTAINER girish <mpra07@rediffmail.com)
 #install updates and packages apache, nginx, php mod_php and ansible to the image
-	#updating centos
 #VOLUME  /var/www/devopsdocker  /var/www/devopsdocker
+	#updating centos
 RUN  yum -y update && \
-    #disable iptables
-	systemctl disable firewalld  && \
-	#install epel-release for centos
+    	#install epel-release for centos
 	yum -y install epel-release && \
 	#install apache
 	# steps to enable systemctl in centos container
@@ -24,6 +22,8 @@ RUN  yum -y update && \
 	#docker build --rm -t c7-systemd . (c7-systemd can be replaced with other name)
 	#Then run the image with:
 	#docker run -itd --privileged --name=yourName c7-systemd
+	#disable iptables
+	systemctl disable firewalld  && \
 	yum -y install httpd && \
 	# enable apache on boot
 	systemctl enable httpd && \
