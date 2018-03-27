@@ -1,6 +1,6 @@
 #
 #pull centos from dockerhub
-FROM Centos
+FROM centos:7
 MAINTAINER girish <mpra07@rediffmail.com)
 #install updates and packages apache, nginx, php mod_php and ansible to the image
 	#updating centos
