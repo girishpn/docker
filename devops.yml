@@ -1,0 +1,137 @@
+---
+
+  - hosts: local
+    connections: local
+    become: yes
+    become_method: sudo
+     
+    - name: permission to "devopsdocker" docker bind directory
+      file:
+          path=/var/www/devopsdocker
+          state=directory
+          owner=apache
+          group=apache
+          mode=7777
+    - name: Give permission to the documentroot
+      file:
+          path=/var/www
+          state=directory
+          owner=root
+          group=root
+          mode=7777
+    - name: create nginx index page
+      file:
+          path=/var/www/devopsdocker/index.html
+          state=touch
+          owner=nginx
+          group=nginx
+          mode=7777
+	- name: edit index.html file
+      blockinfile:
+          path:/var/www/devopsdocker/index.html
+		  block: |
+		      <html>
+              <head>
+              <title>dvops-test-Nginx</title>
+              </head>
+              <body>
+              <h1>CFR DevOps test-Nginx</h1>
+              </body>
+              </html>
+	- name: create index.php page
+      file:
+          path=/var/www/devopsdocker/index.php
+          state=touch
+          owner=apache
+          group=apache
+          mode=7777	  
+    - name: edit index.php 
+      blockinfile:
+          path:/var/www/devopsdocker/index.php
+		  block: |
+		      <?php
+              phpinfo();
+			  ?>
+#	- name: edit nginx.conf file
+#	  blockinfile:
+#         path: /etc/nginx/conf.d/virtual.conf
+#             server {
+#             listen       80 default_server;
+#             listen       [::]:80 default_server;
+#             server_name  _;
+#             root         /usr/share/nginx/html;
+#
+#             # Load configuration files for the default server block.
+#             include /etc/nginx/default.d/*.conf;
+
+#             location / {
+#             }
+
+#             error_page 404 /404.html;
+#             location = /40x.html {
+#             }
+
+#             error_page 500 502 503 504 /50x.html;
+#             location = /50x.html {
+#             }
+#             }
+
+	- name: create nginx conf file
+	  file:
+	      path=	/etc/nginx/conf.d/virtual.conf
+          state=touch
+          owner=nginx
+          group=nginx
+          mode=7777  
+    - name: Edit nginx conf.
+      blockinfile:
+	      path: /etc/nginx/conf.d/virtual.conf
+		  block: |
+              server {
+              listen 80;
+              root /var/www/devopsdocker; 
+              index index.php index.html index.htm;
+              server_name www.devopsdocker.com devopsdocker.com;
+              location ~* \.(jpg|css|png|js)$ {
+              try_files $uri $uri $uri $uri/ /index.php;
+              }
+              location ~ \.php$ {
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Forwarded-For $remote_addr;
+              proxy_set_header Host $host;
+              proxy_pass http://127.0.0.1:8080;
+              }
+              location ~ /\.ht {
+              deny all;
+              }
+              }
+	- name: Change apache listen port 
+      lineinfile:
+          path: /etc/httpd/conf/httpd.conf
+          regexp: 'Listen 80'
+          line: 'Listen 127.0.0.0.1:8080'		  
+    - name: create virtual host in apache
+      blockinfile:
+          path: /etc/httpd/conf/httpd.conf
+          block: |
+            <VirtualHost *:8080>
+            ServerAdmin webmaster@devopsdocker
+            DocumentRoot /var/www/devopsdocker/
+            ServerName devopsdocker.com
+            ServerAlias devopsdocker
+            </VirtualHost>
+	- name: restart services
+      service: name={{item}} state=started
+      with_items: 
+        - httpd
+        - nginx
+    - name: Enable services on boot
+      service: name={{item}} enabled=yes
+      with_items:
+        - httpd
+        - nginx		
+			
+		  
+		  
+
+			
