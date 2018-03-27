@@ -32,8 +32,10 @@ RUN  yum -y update && \
 	 yum -y yum php-opcache && \
 	# install Ansible
 	 yum -y install ansible
+	# remove default ansible config files 
 	 rm -rf /etc/ansible/ansible.cfg
 	 rm -rf /etc/ansible/hosts
+	# copy updated ansible file from which has to be put in /root directory in host system  
 	 cp /root/ansible.cfg /etc/ansible/
 	 cp /root/hosts /etc/ansible/
 	 cp /root/devops.yml /etc/ansbile/
