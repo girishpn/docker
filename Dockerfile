@@ -1,4 +1,4 @@
- 
+
 #pull centos from dockerhub
 FROM Centos
 MAINTAINER girish <mpra07@rediffmail.com)
@@ -39,7 +39,7 @@ RUN  yum -y update && \
 	 cp /root/devops.yml /etc/ansbile/
 	 ansible-playbook /etc/ansible/devops
 	# steps to enable systemctl in centos container
-	RUN (cd /lib/systemd/system/sysinit.target.wants/; for i in ; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); 
+	(cd /lib/systemd/system/sysinit.target.wants/; for i in ; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); 
 	rm -f /lib/systemd/system/multi-user.target.wants/;
 	rm -f /etc/systemd/system/.wants/;
 	rm -f /lib/systemd/system/local-fs.target.wants/; 
