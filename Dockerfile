@@ -1,113 +1,43 @@
+#pull centos from dockerhub
+FROM Centos
 
----
+#install updates and packages apache, nginx, php mod_php and ansible to the image
+	#updating centos
+VOLUME  /var/www/devopsdocker  /var/www/devopsdocker
+RUN sudo yum -y update && \
+    #disable iptables
+	sudo systemctl disable firewalld  && \
+	#install epel-release for centos
+	sudo yum -y install epel-release && \
+	#install apache
+	sudo yum -y install httpd && \
+	# enable apache on boot
+	sudo systemctl enable httpd && \
+	# start apache service
+	sudo systemctl start httpd && \
+	# install nginx
+	sudo yum -y install nginx && \
+	#start nginx service
+	sudo systemctl start nginx && \
+	#enable nginx on boot
+	sudo systemctl enable nginx && \
+    #install remi repo to install php7
+	sudo yum -y install http://rpms.remirepo.net/enterprise/remi-release-7.rpm && \
+	# install yum utils
+	sudo yum -y install yum-utils && \
+	# enable remi repo
+	sudo yum-config-manager --enable remi-php70 && \
+	# install apache module for php
+	sudo yum -y yum php-opcache && \
+	# install Ansible
+	sudo yum -y install ansible
+	sudo rm -rf /etc/ansible/ansible.cfg
+	sudo rm -rf /etc/ansible/hosts
+	sudo cp /root/ansible.cfg /etc/ansible/
+	sudo cp /root/hosts /etc/ansible/
+	sudo cp /root/devops.yml /etc/ansbile/
+	sudo ansible-playbook /etc/ansible/devops
 
-  - hosts: local
-    connections: local
-    become: yes
-    become_method: sudo
-     
-    - name: permission to "devopsdocker" docker bind directory
-      file:
-          path=/var/www/devopsdocker
-          state=directory
-          owner=apache
-          group=apache
-          mode=7777
-    - name: Give permission to the documentroot
-      file:
-          path=/var/www
-          state=directory
-          owner=root
-          group=root
-          mode=7777
-    - name: create nginx index page
-      file:
-          path=/var/www/devopsdocker/index.html
-          state=touch
-          owner=nginx
-          group=nginx
-          mode=7777
-    - name: edit index.html file
-      blockinfile:
-          path:/var/www/devopsdocker/index.html
-          block: |
-              <html>
-              <head>
-              <title>dvops-test-Nginx</title>
-              </head>
-              <body>
-              <h1>CFR DevOps test-Nginx</h1>
-              </body>
-              </html>
-    - name: create index.php page
-      file:
-          path=/var/www/devopsdocker/index.php
-          state=touch
-          owner=apache
-          group=apache
-          mode=7777	  
-    - name: edit index.php 
-      blockinfile:
-          path:/var/www/devopsdocker/index.php
-          block: |
-              <?php
-              phpinfo();
-              ?>
-    - name: create nginx conf file
-      file:
-          path=/etc/nginx/conf.d/virtual.conf
-          state=touch
-          owner=nginx
-          group=nginx
-          mode=7777  
-    - name: Edit nginx conf.
-      blockinfile:
-      path: /etc/nginx/conf.d/virtual.conf
-      block: |
-              server {
-              listen 80;
-              root /var/www/devopsdocker; 
-              index index.html index.htm;
-              server_name devopsdocker;
-              
-              location \ {
-              proxy_set_header X-Real-IP $remote_addr;
-              proxy_set_header X-Forwarded-For $remote_addr;
-              proxy_set_header Host $host;
-              proxy_pass http://127.0.0.1:8080;
-              }
-              
-              location \ {
-              if ($request_filename = [gif|jpg|png])
-              {return http://www.devopsdocker.com/index.html;
-               }
+	
 
-              location ~ /\.ht {
-              deny all;
-              }
-              }
-    - name: Change apache listen port 
-      lineinfile:
-          path: /etc/httpd/conf/httpd.conf
-          regexp: 'Listen 80'
-          line: 'Listen 127.0.0.0.1:8080'		  
-    - name: create virtual host in apache
-      blockinfile:
-          path: /etc/httpd/conf/httpd.conf
-          block: |
-            <VirtualHost *:8080>
-            ServerAdmin webmaster@devopsdocker
-            DocumentRoot /var/www/devopsdocker/
-            ServerName devopsdocker.com
-            ServerAlias devopsdocker
-            </VirtualHost>
-    - name: restart services
-      service: name={{item}} state=started
-      with_items: 
-        - httpd
-        - nginx
-    - name: Enable services on boot
-      service: name={{item}} enabled=yes
-      with_items:
-        - httpd
-        - nginx	
+	 
