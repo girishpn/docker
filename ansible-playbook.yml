@@ -89,7 +89,7 @@
       lineinfile:
           path: /etc/httpd/conf/httpd.conf
           regexp: 'Listen 80'
-          line: 'Listen 127.0.0.0.1:8080'		  
+          line: 'Listen 8080'		  
     - name: create virtual host in apache
       blockinfile:
           path: /etc/httpd/conf/httpd.conf
