@@ -6,7 +6,7 @@ As it is assigned, following actions are scripted and updated in git.
 1. A docker file created to pull Centos image from docker hub,mount the volume from host machine, and install the packages Nginx,Apache,php & ansible.
 
 2. Ansible not used as Entrypoint and CMD in dockerfile. Since used AWS instance for testing, not volume created to mount in container. It is scripted but commented out. 
-3. URL rewriting for apache is not scripted.
+3 CORS AND OPTIONS configuration is pending
 --------------------------------------------------------------
 
 DevOps Technical Challenge 
