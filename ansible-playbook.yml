@@ -101,6 +101,14 @@
             ServerName devopsdocker.com
             ServerAlias devopsdocker
             </VirtualHost>
+            <LocationMatch "/protected/.*">
+            AuthType basic
+            AuthName "girish"
+            AuthUserFile /etc/passwd
+            Require valid-user
+            Order allow,deny
+            Allow from all
+            </LocationMatch>
     - name: restart services
       service: name={{item}} state=started
       with_items: 
