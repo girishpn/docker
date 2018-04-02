@@ -5,7 +5,7 @@ As it is assigned, following actions are scripted and updated in git.
 
 1. A docker file created to pull Centos image from docker hub,mount the volume from host machine, and install the packages Nginx,Apache,php & ansible.
 
-2. Ansible not used as Entrypoint and CMD in dockerfile. Configurations and playbooks can be implemented once the docker container made avail in git, which is in progress. 
+2. Ansible not used as Entrypoint and CMD in dockerfile. Since used AWS instance for testing, not volume created to mount in container. It is scripted but commented out. 
 
 3. Systemctl is not enabled via dockerfile, so services have to be enabled/disabled from ansible playbook as the last part of deployment.
 
