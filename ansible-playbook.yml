@@ -68,7 +68,7 @@
               root /var/www/devopsdocker; 
               index index.html index.htm;
               server_name devopsdocker;
-              return 443 https://www.devopsdocker.com/index.html;
+              return 443 https://www.devopsdocker.com/index.php;
               
               #location \ {
               #proxy_set_header X-Real-IP $remote_addr;
