@@ -3,7 +3,7 @@ FROM Centos
 
 #install updates and packages apache, nginx, php mod_php and ansible to the image
 	#updating centos
-VOLUME  /var/www/devopsdocker  /var/www/devopsdocker
+#VOLUME  /var/www/devopsdocker  /var/www/devopsdocker
 RUN sudo yum -y update && \
     #disable iptables
 	sudo systemctl disable firewalld  && \
