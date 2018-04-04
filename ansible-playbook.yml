@@ -139,13 +139,12 @@
      blockinfile:
           path: /var/www/devopsdocker/.htaccess
           block: |
-            Header always set Access-Control-Allow-Origin "*"
-            Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
-            Header always set Access-Control-Max-Age "1000"
-            Header always set Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept, client-security-token"
-            RewriteEngine On
-            RewriteCond %{REQUEST_METHOD} OPTIONS
-            RewriteRule ^(.*)$ $1 [R=200]
+            <FilesMatch ".(eot|ttf|otf|woff|woff2)">
+            Header set Access-Control-Allow-Origin "*"
+            Header set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
+            #RewriteCond %{REQUEST_METHOD} OPTIONS
+            #RewriteRule ^(.*)$ $1 [R,L]
+            </FilesMatch>
     - name: restart services
       service: name={{item}} state=started
       with_items: 
