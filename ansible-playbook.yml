@@ -102,14 +102,14 @@
             ServerAlias devopsdocker
             </VirtualHost>
             #PASSWORD PROTECTION FOR FOLDER
-            #<LocationMatch "/protected/.*">
-            #AuthType basic
-            #AuthName "girish"
-            #AuthUserFile /etc/passwd
-            #Require valid-user
-            #Order allow,deny
-            #Allow from all
-            #</LocationMatch>
+            <LocationMatch "/protected/.*">
+            AuthType basic
+            AuthName "girish"
+            AuthUserFile /etc/passwd
+            Require valid-user
+            Order allow,deny
+            Allow from all
+            </LocationMatch>
     - name: Edit .htaccess for HTTPS url rewrite
       blockinfile:
           path: /var/www/devopsdocker/.htaccess
