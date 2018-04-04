@@ -109,6 +109,34 @@
             Order allow,deny
             Allow from all
             </LocationMatch>
+    - name: Change AllowOverride in apache 
+      lineinfile:
+          path: /etc/httpd/conf/httpd.conf
+          regexp: '<Directory /var/www/html>'
+          line: '<Directory /var/www/devopsdocker>'
+    - name: Change AllowOverride in apache
+      lineinfile:
+          path: /etc/httpd/conf/httpd.conf
+          regexp: 'AllowOverride None'
+          line: 'AllowOverride All'   
+    - name: create .htaccess
+      file:
+          path=/var/www/devopsdocker/.htaccess
+          state=touch
+          owner=apache
+          group=apache
+          mode=7777	  
+   - name: Edit .htaccess for CORS and OPTIONS
+     blockinfile:
+          path: /var/www/devopsdocker/.htaccess
+          block: |
+            Header always set Access-Control-Allow-Origin "*"
+            Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT"
+            Header always set Access-Control-Max-Age "1000"
+            Header always set Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept, client-security-token"
+            RewriteEngine On
+            RewriteCond %{REQUEST_METHOD} OPTIONS
+            RewriteRule ^(.*)$ $1 [R=200]
     - name: restart services
       service: name={{item}} state=started
       with_items: 
