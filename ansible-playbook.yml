@@ -68,7 +68,7 @@
               root /var/www/devopsdocker; 
               index index.html index.htm;
               server_name devopsdocker;
-              return 443 https://www.devopsdocker.com/index.php;
+              #return 443 https://www.devopsdocker.com/index.php;
               
               #location \ {
               #proxy_set_header X-Real-IP $remote_addr;
@@ -101,6 +101,7 @@
             ServerName devopsdocker.com
             ServerAlias devopsdocker
             </VirtualHost>
+            #PASSWORD PROTECTION FOR FOLDER
             <LocationMatch "/protected/.*">
             AuthType basic
             AuthName "girish"
@@ -109,6 +110,14 @@
             Order allow,deny
             Allow from all
             </LocationMatch>
+    - name: Edit .htaccess for HTTPS url rewrite
+      blockinfile:
+          path: /var/www/devopsdocker/.htaccess
+          block: |        
+            #REWRITE RULE FOR HTTPS
+            RewriteEngine On 
+            RewriteCond %{HTTPS} !=on 
+            RewriteRule ^/?(.*) https://www.devopsdocker.com/index.php [R,L]   
     - name: Change AllowOverride in apache 
       lineinfile:
           path: /etc/httpd/conf/httpd.conf
