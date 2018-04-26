@@ -1,5 +1,5 @@
 #pull centos from dockerhub
-FROM Centos
+FROM centos
 
 #install updates and packages apache, nginx, php mod_php and ansible to the image
 
@@ -17,7 +17,7 @@ RUN  yum -y update && \
     rm -f /lib/systemd/system/basic.target.wants/*;\
     rm -f /lib/systemd/system/anaconda.target.wants/*;
     #disable iptables
-	systemctl disable firewalld  && \
+	#sudo service firewalld stop  && \
 	#install epel-release for centos
 	 yum -y install epel-release && \
 	#install apache
@@ -39,7 +39,7 @@ RUN  yum -y update && \
 	# enable remi repo
 	 yum-config-manager --enable remi-php70 && \
 	# install apache module for php
-	 yum -y yum php-opcache && \
+	 yum -y install php-opcache && \
 	# install Ansible
 	 yum -y install ansible
 	# remove default ansible config file and copy the updated files and run it
