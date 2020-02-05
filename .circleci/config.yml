@@ -6,3 +6,21 @@ jobs:
     steps:
       - checkout
       - run: echo "Hello World"
+      
+commands:
+   sayhello:
+     description: "command for demonstration purposes"
+     parameters:
+      to:
+        type: string
+        default: "Hello World"
+     steps:
+      - run: echo << parameters.to >>
+      
+jobs:
+  myjob:
+     docker:
+      - image: "circleci/node:9.6.1"
+     steps:
+      - sayhello:
+          to: "Lev"
