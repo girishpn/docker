@@ -6,7 +6,8 @@ commands:
       to:
         type: string
         default: "Hello World"
-     
+   steps:
+     - run: echo << parameters.to >>
 
 jobs:
   build:
