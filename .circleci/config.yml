@@ -1,4 +1,4 @@
-version: 2.0
+version: 2.1
 commands:
    sayhello:
      description: "command for demonstration purposes"
@@ -8,6 +8,7 @@ commands:
         default: "Hello World"
      steps:
       - run: echo << parameters.to >>
+
 jobs:
   build:
     docker:
@@ -17,3 +18,5 @@ jobs:
       - run: echo "Hello World"
       - sayhello:
           to: "Lev"
+
+
