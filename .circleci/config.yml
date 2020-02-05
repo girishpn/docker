@@ -6,13 +6,12 @@ commands:
       to:
         type: string
         default: "Hello World"
-     steps:
-      - run: echo << parameters.to >>
+     
 
 jobs:
   build:
     docker:
-      - image: centos
+      - image: circleci/node:9.6.1
     steps:
       - checkout
       - run: echo "Hello World"
