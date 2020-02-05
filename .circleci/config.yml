@@ -16,7 +16,7 @@ jobs:
     steps:
       - checkout
       - run: echo "Hello World"
-#      - sayhello:
-#          to: "Lev"
+      - sayhello:
+          to: "Pantheon Deploy"
 
 
