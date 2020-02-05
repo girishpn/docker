@@ -1,15 +1,7 @@
 version: 2.1
 orbs:
   aws-s3: circleci/aws-s3@1.0.0.3
-workflows:
-  build-test-deploy:
-    jobs:
-      - deploy2s3: # a sample job that would be defined above.
-        steps:
-          - aws-s3/sync:
-              from: .
-              to: "s3://mybucket_uri"
-              overwrite: true
+     
 commands:
    sayhello:
      description: "command for demonstration purposes"
@@ -38,10 +30,22 @@ jobs:
   build:
     docker:
       - image: circleci/node:9.6.1
+      - deploy2s3: # a sample job that would be defined above.
+          
+  
     steps:
       - checkout
       - run: echo "CircleCI test"
       - sayhello:
           to: "Pantheon Deploy"
-
+      - aws-s3/sync:
+              from: .
+              to: "s3://mybucket_uri"
+              overwrite: true
+ 
+ workflows:
+    version: 2
+    jobs:
+      - build
+      
 
