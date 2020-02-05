@@ -1,4 +1,15 @@
 version: 2.1
+orbs:
+  aws-s3: circleci/aws-s3@1.0.0.3
+workflows:
+  build-test-deploy:
+    jobs:
+      - deploy2s3: # a sample job that would be defined above.
+        steps:
+          - aws-s3/sync:
+              from: .
+              to: "s3://mybucket_uri"
+              overwrite: true
 commands:
    sayhello:
      description: "command for demonstration purposes"
@@ -8,6 +19,20 @@ commands:
         default: "Hello World"
      steps:
        - run: echo << parameters.to >>
+   sync:
+    description: "A simple encapsulation of doing an s3 sync"
+    parameters:
+      from:
+        type: string
+      to:
+        type: string
+      overwrite:
+        default: false
+        type: boolean
+    steps:
+      - run:
+          name: Deploy to S3
+          command: aws s3 sync << parameters.from >> << parameters.to >><<# parameters.overwrite >> --delete<</ parameters.overwrite >>"
 
 jobs:
   build:
